@@ -1,121 +1,7 @@
-(ns clojure-for-the-brave-and-true.01-do-things)
-
-;(defn isEven?
-;  ^Boolean
-;  "Check if an integer is even."
-;  [^Integer number]
-;  ((zero? (% number 2))))
-
-(defn
-  ^Boolean isEven? [^Integer x]
-  "Determines if a number is even."
-  (zero? (mod x 2)))
-
-
-(defn hammer-time
-  [weapon]
-  "If a hammer, hammer-time!"
-  (if (= weapon "hammer")
-    (do (println "It's hammer time!")
-        true)
-    (do (println "You only have a measly" weapon)
-        false)))
-
-;; Everything evaluates to true except nil and false
-(defn use-sword?
-  [weapon]
-  (when (= "sword" weapon)
-    (println "I see you prefer the blade...")
-    (println "How noble of you.")
-    true))
-
-;; or returns first true thing in list of things
-(defn sword-or-shield?
-  [hand]
-  (or (= hand "sword") (= hand "shield") "neither sword nor shield"))
-
-;; and returns first false thing or last true thing in list of things.
-(defn jedi-elf-sorcerer
-  [whaaaa]
-  (and (= whaaaa "jedi") (= whaaaa "elf") (= whaaaa "sorcerer")))
-
-;; def names things
-(def failed-explorers
-  ["Larry Potter""Doreen the Explorer" "The Incredible Bulk"])
-
-(defn error-message
-  [severity]
-  (str "ER MAH GERD! It's an error message! We're"
-    (if (= severity :mild) "mildly inconvenienced." "DOOMED!")))
-
-;; MAPS
-(def myMap {:first-name "Sebastian" :last-name "Raaphorst"})
-;; or
-(hash-map :first-name "Oink" :last-name "McGee")
-
-;; Can even store functions
-(def ops {:plus + :minus - :times * :divide /})
-
-;; Specify an op and perform it on operands
-(defn perform-op
-  [op x y]
-  ((get ops op) x y))
-
-;; Can specify last entry to get as a default
-(def creatures {:ogre "ogre" :goblin "goblin" :yagungle "yagungle"})
-(defn get-creature-name
-  [creature]
-  (get creatures creature "OYNK"))
-
-;; get-in for nested maps
-(def ho-hum (get-in {:a 0 :b {:c "ho hum"}} [:b :c]))
-
-;; These are all equivalent, where "Nope" is optional default parameter, otherwise nil.
-(def myMap {:a 1 :b 2 :c 3})
-(def a-val (get myMap :a "Nope"))
-(def b-val (:b myMap "Nope"))
-(def c-val (myMap :c "Nope"))
-(def default-val (myMap :d "Nope"))
-
-
-;; VECTORS: Arrays
-(def myVector [1 2 3])
-;; or
-(vector 1 2 3)
-
-;; conj adds to end of vector
-(conj myVector 4)                                           ;; [1 2 3 4]
-
-;; get retrieves by index
-(get [1 2 3] 0)                                             ;; 1
-
-
-;; LISTS: Linked list
-(def myList '(0 1 2 3))
-;; or
-(list 0 1 2 3)
-
-;; conj adds to beginning
-(conj myList -1)                                            ;; (-1 0 1 2 3)
-
-;; nth gets nth element
-(nth myList 0)                                              ;; 0
-
-
-;; SETS
-(def mySet #{1, 3, 5, 4})
-;; or
-(hash-set 1 3 5 4)
-
-;; conj adds
-(conj mySet 2)
-
-;; check containment with contains?
-(contains? mySet 6)
-
-
+(ns clojure-for-the-brave-and-true.chap03.other)
 
 ;; FUNCTIONS with multiple arity
+
 (defn say-hello
   ([] (say-hello "World"))
   ([name] (str "Hello, " name "!")))
@@ -135,6 +21,7 @@
 
 
 ;; VECTOR DESTRUCTURING
+
 (defn my-first
   [[first-thing]]
   first-thing)
@@ -149,6 +36,7 @@
 
 
 ;; MAP DESTRUCTURING
+
 (defn treasure
   [{lat :lat lng :lng}]
   (str "The treasure is at lat " lat ", long " lng "."))
@@ -161,6 +49,7 @@
 
 
 ;; ANONYMOUS FUNCTIONS / LAMBDAS
+
 (map (fn [x] (* 2)) [1 2 3])
 
 ;; These two are equivalent:
@@ -295,7 +184,8 @@
 ;; 2. maps the parts to their sizes and sums them, binding to body-part-size-sum.
 ;; 3. generates a random number that corresponds to a body part and binds to target.
 (defn hit
-  (let [sym-parts (better-symmetrize-parts asym-hobbit-body-parts)
+  [asym-body-parts]
+  (let [sym-parts (better-symmetrize-parts asym-body-parts)
         body-part-size-sum (reduce + (map :size sym-parts))
         target (rand body-part-size-sum)]
     ;; loop retrieves the actual body part.
@@ -308,3 +198,28 @@
         part
         ;; Otherwise recur, passing in the remaining parts and the accumulated size to the loop.
         (recur remaining (+ accumulated-size (:size (first remaining))))))))
+
+
+(defn n-hits
+  [n asym-body-parts]
+  (loop [idx n parts []]
+    (if (zero? idx)
+      parts
+      (recur (dec idx) (into parts [(hit asym-body-parts)])))))
+
+
+
+(defn -main
+  []
+  (println (say-hello))
+  (println (codger "Billy" "Jean" "Martin"))
+  (println (favourite-things "Steven" "Zed" "Dex" "Clojure"))
+  (chooser ["raindrops" "bunnies" "all of the crap" "Kotlin"])
+  (println (treasure {:lat 45 :lng 82.6}))
+  (println (trap {:lat 44.9 :lng 82.7}))
+  (println ((inc-maker 3) 5))
+  (println (str "Hobbit parts: " full-hobbit))
+  (counter 1 9 3)
+  (println (str "Better hobbit parts: " better-hobbit))
+  (println (str "HIT: " (clojure.string/join ", " (map :name (n-hits 5 asym-hobbit-body-parts)))))
+  )
