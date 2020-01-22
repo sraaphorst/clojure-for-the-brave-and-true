@@ -1,4 +1,4 @@
-(ns clojure-for-the-brave-and-true.chap03.assignments)
+(ns clojure-for-the-brave-and-true.chap03.assignments.assignment1)
 
 (defn -main
   []

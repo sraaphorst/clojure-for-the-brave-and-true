@@ -1,4 +1,4 @@
-(ns clojure-for-the-brave-and-true.chap03.day-288)
+(ns clojure-for-the-brave-and-true.chap03.assignments.day-288)
 
 ;; Convert an int into a list of Ints
 (defn int-to-list
